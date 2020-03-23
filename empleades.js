@@ -91,6 +91,149 @@ const buscarEmpleades = (empleades, area, puesto, seniority) => {
 
 const errorEnProduccion = (empleades) => {
     
+    const enGuardia = empleade => {
+        empleade.haceGuardia = true;
+
+        return empleade
+    }
 
     return empleades.map(enGuardia);
 }
+
+// console.log(errorEnProduccion(empleades))
+
+// subirDeCategoria, que tome como parámetro un objeto empleade. Si diche empleade no tiene un seniority "Senior", cambiar el valor de su propiedad seniority con el siguiente que le corresponde en orden ("Trainee" -> "Junior" -> "Semisenior" -> "Senior"), y le incremente en 10000 el sueldo
+
+const subirDeCategoria = empleades => {
+
+    const subeCategoria = empleade => {
+        if (empleade.seniority === "Trainee") {
+            empleade.seniority = "Junior";
+            empleade.sueldo += 10000;
+
+
+            return empleade
+        }
+        else if (empleade.seniority === "Junior") {
+            empleade.seniority = "Semisenior";
+            empleade.sueldo += 10000;
+
+            return empleade
+        }
+        else if (empleade.seniority === "Semisenior") {
+            empleade.seniority = "Senior";
+            empleade.sueldo += 10000;
+
+            return empleade
+        }
+        return empleade
+    }
+    return empleades.map(subeCategoria)
+}
+// console.log(subirDeCategoria(empleades))
+
+// agregarTecnologias, que agregue a todos los objetos empleades la propiedad tecnologías,que es un array conteniendo los valores "GIT" y "Node.js"
+
+const agregarTecnologias = empleades => {
+    
+    const masTecnologias = empleade => {    
+        empleade["Tecnologías"] = ["GIT", "Node.js"];
+    
+        return empleade
+    }
+
+    return empleades.map(masTecnologias)
+}
+
+// console.log(agregarTecnologias(empleades))
+
+
+// empleadeSabeLenguaje, que tome por parámetro un objeto empleade (elemento del array empleades) y un lenguaje y devuelva true si dicho empleade sabe dicho lenguaje
+
+const empleadeSabeLenguaje = (empleade, lenguaje) => empleade.lenguajes.includes(lenguaje);
+
+// console.log(empleadeSabeLenguaje(empleades[0], "Firebase"));
+
+// empleadesQueSabenLenguaje, que tome por parámetro un lenguaje y devuelva todes les empleades que saben dicho lenguaje (usar la función anterior)
+
+const empleadesQueSabenLenguaje = (empleades, lenguaje, empleadeSabeLenguaje) => {
+    const porLenguaje = empleade => empleadeSabeLenguaje(empleade, lenguaje);
+
+    return empleades.filter(porLenguaje);
+}
+
+// console.log(empleadesQueSabenLenguaje(empleades, "Java", empleadeSabeLenguaje))
+
+// empleadesQueSabenLenguajes, que tome por parámetro un array de lenguajes y devuelva un array con aquelles empleades que sepan todos esos lenguajes
+
+const empleadesQueSabenLenguajes = (empleades, lenguajes) =>{ 
+
+    const incluyeLenguajes = empleade => {
+        const newArray = []
+        
+        for (const lenguaje of lenguajes) {
+           const resultado = empleade.lenguajes.includes(lenguaje)
+
+           resultado ? newArray.push(resultado) : newArray;
+        }        
+
+        if (newArray.length <= 1) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }       
+    
+    const porLenguaje = empleade => lenguajes.every(lenguaje => incluyeLenguajes(empleade, lenguaje))
+
+    return empleades.filter(porLenguaje)
+}
+
+// console.log(empleadesQueSabenLenguajes(empleades, ['JavaScript', 'Java']));
+
+// empleadesQueSabenAlgunosLenguajes, que tome por parámetro un array de lenguajes y devuelva un array con aquelles empleades que sepan al menos uno de esos lenguajes
+
+const empleadesQueSabenAlgunosLenguajes = (empleades, lenguajes) => {
+    const porLenguajes = empleade => {
+        let verSiLoIncluye = false;
+
+        for (const lenguaje of lenguajes) {
+          verSiLoIncluye = empleade.lenguajes.includes(lenguaje);
+        }
+        
+        return verSiLoIncluye
+    };
+
+    return empleades.filter(porLenguajes)
+}
+
+
+// empleadesConMejorSueldo, que devuelva un array con los 10 mejores empleades pagos (investigar metodo sort)
+
+const empleadesConMejorSueldo = empleades => {
+    const porMayorSueldo = (a, b) => {
+        return b.sueldo - a.sueldo
+    }
+
+    const empleadesOrdenadosPorSueldo = empleades.sort(porMayorSueldo);
+
+    const mayores10 = [];
+    for (let i = 0; i < empleadesOrdenadosPorSueldo.length; i++) {
+        mayores10.length < 10 ? mayores10.push(empleadesOrdenadosPorSueldo[i]) : mayores10;
+    }
+
+    return mayores10
+}
+
+// console.log(empleadesConMejorSueldo(empleades));
+
+// obtenerTitulosCompletos, que devuelva un array donde cada elemento es un string con la forma "nombre, puesto seniority, area", p.ej.: "Nadia Conrad, Senior Backend Developer, Desarrollo", habiendo un elemento por cada empleade (usar map)
+
+const obtenerTitulosCompletos = empleades => {
+   const titulosCompletos = empleade => `${empleade.nombre}, ${empleade.seniority}, ${empleade.puesto}, ${empleade.area}`;
+
+    return empleades.map(titulosCompletos)
+}
+
+// console.log(obtenerTitulosCompletos(empleades))
